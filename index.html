@@ -1,0 +1,86 @@
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagination Example</title>
+  <style>
+    #pagination {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
+    #pagination li {
+      margin-right: 10px;
+    }
+    #pagination li.active {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pagination Example</h1>
+  <ul id="items"></ul>
+  <ul id="pagination"></ul>
+
+  <script src="script.js">
+
+    // Data
+const items = [];
+for (let i = 1; i <= 100; i++) {
+  items.push({ id: i, name: `Item ${i}` });
+}
+
+// Pagination variables
+const itemsPerPage = 12;
+const totalPages = Math.ceil(items.length / itemsPerPage);
+const currentPage = 1;
+
+// Function to get the current page items
+function getCurrentPageItems(items, currentPage, itemsPerPage) {
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return items.slice(startIndex, endIndex);
+}
+
+// Function to render the pagination
+function renderPagination(totalPages, currentPage) {
+  const paginationHTML = [];
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === currentPage) {
+      paginationHTML.push(`<li class="active">${i}</li>`);
+    } else {
+      paginationHTML.push(`<li>${i}</li>`);
+    }
+  }
+  document.getElementById('pagination').innerHTML = paginationHTML.join('');
+}
+
+// Function to render the items
+function renderItems(items) {
+  const itemsHTML = [];
+  items.forEach((item) => {
+    itemsHTML.push(`<li>${item.name}</li>`);
+  });
+  document.getElementById('items').innerHTML = itemsHTML.join('');
+}
+
+// Render the initial items and pagination
+renderItems(getCurrentPageItems(items, currentPage, itemsPerPage));
+renderPagination(totalPages, currentPage);
+
+// Add event listener to the pagination
+document.getElementById('pagination').addEventListener('click', (e) => {
+  if (e.target.tagName === 'LI') {
+    const newPage = parseInt(e.target.textContent);
+    renderItems(getCurrentPageItems(items, newPage, itemsPerPage));
+    renderPagination(totalPages, newPage);
+  }
+});
+
+  </script>
+</body>
+</html>
